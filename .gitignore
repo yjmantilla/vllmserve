@@ -1,3 +1,6 @@
+# Downloaded model weights (can be very large)
+models/
+uv.lock
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

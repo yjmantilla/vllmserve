@@ -1,0 +1,51 @@
+# ── Model ─────────────────────────────────────────────────────────────────────
+model:
+  # HuggingFace repo ID (e.g. "meta-llama/Llama-3.1-8B-Instruct")
+  name: "kai-os/gemma4-31b-Opus-4.6-reasoning"
+  #"meta-llama/Llama-3.1-8B-Instruct"
+  local_path: "./models/gemma4-31b-Opus-4.6-reasoning"
+  # Git revision / tag / commit hash to pin (default: main)
+  revision: "main"
+
+  # Override with a local path after running download.sh
+  # local_path: "./models/Llama-3.1-8B-Instruct"
+
+  # Custom tokenizer repo (defaults to the model repo)
+  # tokenizer: "meta-llama/Llama-3.1-8B-Instruct"
+
+# ── Server ─────────────────────────────────────────────────────────────────────
+server:
+  host: "0.0.0.0"
+  port: 8000
+
+  # Require a Bearer token on every request (null = no auth)
+  # api_key: "sk-my-secret"
+
+  # Name returned in the /v1/models endpoint (defaults to model.name)
+  # served_model_name: "my-llama"
+
+# ── vLLM engine ────────────────────────────────────────────────────────────────
+vllm:
+  # Number of GPUs for tensor parallelism
+  tensor_parallel_size: 1
+
+  # Number of pipeline stages (multi-node)
+  pipeline_parallel_size: 1
+
+  # Maximum total token length (input + output). Lower to save VRAM.
+  max_model_len: 4096
+
+  # Weight dtype: "auto" | "float16" | "bfloat16" | "float32"
+  dtype: "auto"
+
+  # Fraction of GPU memory to pre-allocate for the KV cache
+  gpu_memory_utilization: 0.90
+
+  # Maximum concurrent sequences in flight
+  max_num_seqs: 256
+
+  # Quantization: null | "awq" | "gptq" | "fp8" | "bitsandbytes"
+  quantization: null
+
+  # Reuse KV cache across requests with the same prefix
+  enable_prefix_caching: true

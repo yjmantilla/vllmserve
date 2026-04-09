@@ -1,0 +1,16 @@
+[project]
+name = "vllmserve"
+version = "0.1.0"
+description = "Serve LLM models via vLLM with YAML-based configuration"
+requires-python = ">=3.10"
+dependencies = [
+    "vllm>=0.8.0",
+    "pyyaml>=6.0",
+    "huggingface-hub>=0.26.0",
+]
+
+[tool.uv]
+# This is a scripts-only project — no Python package to install.
+package = false
+# Pin vllm to a CUDA build if needed:
+# extra-index-url = ["https://download.pytorch.org/whl/cu124"]
