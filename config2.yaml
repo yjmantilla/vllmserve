@@ -1,9 +1,9 @@
 # ── Model ─────────────────────────────────────────────────────────────────────
 model:
   # HuggingFace repo ID (e.g. "meta-llama/Llama-3.1-8B-Instruct")
-  name: "gpt-oss-120b"
+  name: "kai-os/gemma4-31b-Opus-4.6-reasoning"
   #"meta-llama/Llama-3.1-8B-Instruct"
-  local_path: "/home/y/yorguin/links/scratch/models/gpt-oss-120b"
+  local_path: "./models/gemma4-31b-Opus-4.6-reasoning"
   # Git revision / tag / commit hash to pin (default: main)
   revision: "main"
 
