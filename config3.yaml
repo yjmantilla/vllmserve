@@ -1,9 +1,9 @@
 # ── Model ─────────────────────────────────────────────────────────────────────
 model:
   # HuggingFace repo ID (e.g. "meta-llama/Llama-3.1-8B-Instruct")
-  name: "kai-os/gemma4-31b-Opus-4.6-reasoning"
+  name: "gpt-oss-120b"
   #"meta-llama/Llama-3.1-8B-Instruct"
-  local_path: "./models/gemma4-31b-Opus-4.6-reasoning"
+  local_path: "/home/y/yorguin/links/scratch/models/gpt-oss-120b"
   # Git revision / tag / commit hash to pin (default: main)
   revision: "main"
 
@@ -37,6 +37,10 @@ vllm:
 
   # Weight dtype: "auto" | "float16" | "bfloat16" | "float32"
   dtype: "auto"
+
+  # Tokenizer mode: "auto" | "slow" | "mistral"
+  # Use "slow" if the fast tokenizer is missing attributes (e.g. all_special_tokens_extended)
+  tokenizer_mode: "slow"
 
   # Fraction of GPU memory to pre-allocate for the KV cache
   gpu_memory_utilization: 0.90
