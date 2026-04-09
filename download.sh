@@ -2,8 +2,16 @@
 # Download a model from HuggingFace Hub using standard HTTP (no xet backend).
 #
 # Usage:
-#   ./download.sh [MODEL_ID] [--revision REV] [--token TOKEN] [--models-dir DIR]
-#   ./download.sh              # reads model.name / model.revision from config.yaml
+#   ./download.sh [MODEL_ID] [OPTIONS]
+#   ./download.sh                        # reads model from config.yaml
+#   ./download.sh --gguf-only            # download only *.gguf files (for ollama)
+#
+# Options:
+#   --revision REV      Git revision / tag / commit
+#   --token TOKEN       HuggingFace access token
+#   --models-dir DIR    Local destination root (default: ./models)
+#   --gguf-only         Only download *.gguf files (skips safetensors weights)
+#   --include GLOB      Extra --include glob forwarded to hf download
 #
 # Environment variables:
 #   HF_TOKEN      HuggingFace access token (alternative to --token)
@@ -42,14 +50,18 @@ PYEOF
 MODEL_ID=""
 REVISION=""
 HF_TOKEN="${HF_TOKEN:-}"
+GGUF_ONLY=0
+EXTRA_INCLUDE=()
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --revision)   REVISION="$2";    shift 2 ;;
-        --token)      HF_TOKEN="$2";    shift 2 ;;
-        --models-dir) MODELS_DIR="$2";  shift 2 ;;
+        --revision)   REVISION="$2";               shift 2 ;;
+        --token)      HF_TOKEN="$2";               shift 2 ;;
+        --models-dir) MODELS_DIR="$2";             shift 2 ;;
+        --gguf-only)  GGUF_ONLY=1;                 shift   ;;
+        --include)    EXTRA_INCLUDE+=("$2");        shift 2 ;;
         -*)           die "Unknown flag: $1" ;;
-        *)            MODEL_ID="$1";    shift   ;;
+        *)            MODEL_ID="$1";               shift   ;;
     esac
 done
 
@@ -82,17 +94,29 @@ HF_ARGS=(
     download
     "${MODEL_ID}"
     --local-dir "${LOCAL_DIR}"
-    --local-dir-use-symlinks False
 )
 
 [[ -n "$REVISION" && "$REVISION" != "main" ]] && HF_ARGS+=(--revision "${REVISION}")
 [[ -n "$HF_TOKEN" ]] && HF_ARGS+=(--token "${HF_TOKEN}")
 
-uv run huggingface-cli "${HF_ARGS[@]}"
+# Filter to GGUF files only (useful for the ollama backend — skips large safetensors)
+if [[ "$GGUF_ONLY" -eq 1 ]]; then
+    HF_ARGS+=(--include "*.gguf")
+fi
+
+for pat in "${EXTRA_INCLUDE[@]}"; do
+    HF_ARGS+=(--include "$pat")
+done
+
+uv run hf "${HF_ARGS[@]}"
 
 echo
 echo "Done. Model saved to: ${LOCAL_DIR}"
 echo
-echo "To serve from the local copy, add/update config.yaml:"
+echo "To serve from the local copy, set in config.yaml:"
 echo "  model:"
 echo "    local_path: ${LOCAL_DIR}"
+if [[ "$GGUF_ONLY" -eq 1 ]]; then
+    echo
+    echo "GGUF-only download — use with:  uv run serve.py --backend ollama"
+fi

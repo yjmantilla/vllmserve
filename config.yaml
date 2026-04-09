@@ -49,3 +49,23 @@ vllm:
 
   # Reuse KV cache across requests with the same prefix
   enable_prefix_caching: true
+
+# ── Ollama backend ─────────────────────────────────────────────────────────────
+# Used when running:  uv run serve.py --backend ollama
+ollama:
+  # Name the model will be registered under in ollama
+  model_name: "gemma4-31b-reasoning"
+
+  # Glob pattern to locate the GGUF file inside model.local_path.
+  # Use a specific filename if the repo ships multiple quantisations,
+  # e.g. "*Q4_K_M*.gguf" or "model-Q8_0.gguf".
+  gguf_glob: "*.gguf"
+
+  # Optional system prompt injected via the Modelfile
+  # system: "You are a helpful assistant."
+
+  # Ollama PARAMETER directives (https://github.com/ollama/ollama/blob/main/docs/modelfile.md)
+  parameters:
+    temperature: 0.6
+    num_ctx: 4096
+    num_predict: -1
