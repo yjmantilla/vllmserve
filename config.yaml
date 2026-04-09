@@ -38,6 +38,10 @@ vllm:
   # Weight dtype: "auto" | "float16" | "bfloat16" | "float32"
   dtype: "auto"
 
+  # Tokenizer mode: "auto" | "slow" | "mistral"
+  # Use "slow" if the fast tokenizer is missing attributes (e.g. all_special_tokens_extended)
+  tokenizer_mode: "slow"
+
   # Fraction of GPU memory to pre-allocate for the KV cache
   gpu_memory_utilization: 0.90
 

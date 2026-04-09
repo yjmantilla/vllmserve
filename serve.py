@@ -54,6 +54,7 @@ def _vllm_cmd(cfg: dict) -> list[str]:
     str_args = {
         "dtype": "--dtype",
         "quantization": "--quantization",
+        "tokenizer_mode": "--tokenizer-mode",
     }
     bool_flags = {
         "enable_prefix_caching": "--enable-prefix-caching",
